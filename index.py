@@ -40,7 +40,7 @@ if __name__ == "__main__":
     This program provides methods for calling
     the DigitalOcean API to create and destroy droplets.
     Provision Docker containers on Droplets, and
-    performing healthcheck and maintenance tasks."""
+    performing healthcheck and maintenance tasks. etc."""
     ans=True
     while ans:
         print ("""
