@@ -1,18 +1,35 @@
 #!flask/bin/python
-from flask import Flask, jsonify, json
+from flask import Flask, jsonify, json, request, abort
 from flask.ext.cors import CORS
 from index import list_droplets
 from flask_oauthlib.provider import OAuth2Provider
 from flask.ext.pymongo import PyMongo
+import random
+import string
 
 app = Flask(__name__)
 oauth = OAuth2Provider(app)
-mongo = PyMongo(app)
 CORS(app)
+app.config["MONGO_DBNAME"] = 'do_app'
+mongo = PyMongo(app)
 
 @app.route("/")
 def index():
     return "Hello, World!"
+
+@app.route("/users/create", methods=["POST"])
+def create_user():
+    if not request.json:
+        abort(400)
+    user = {
+        'id': random.sample(string.lowercase+string.digits, 16),
+        'username': request.json['username'],
+        'email': request.json['email'],
+        'password': request.json['password']
+    }
+    users = mongo.db.users
+    users.insert(user)
+    return users.find()
 
 @app.route("/droplets", methods=["GET"])
 def get_droplets():
