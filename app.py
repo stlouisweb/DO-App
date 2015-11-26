@@ -1,4 +1,6 @@
 #!flask/bin/python
+import json
+from bson import ObjectId
 from flask import Flask, jsonify, json, request, abort
 from flask.ext.cors import CORS
 from index import list_droplets
@@ -13,6 +15,12 @@ CORS(app)
 app.config["MONGO_DBNAME"] = 'do_app'
 mongo = PyMongo(app)
 
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
 @app.route("/")
 def index():
     return "Hello, World!"
@@ -22,14 +30,16 @@ def create_user():
     if not request.json:
         abort(400)
     user = {
-        'id': random.sample(string.lowercase+string.digits, 16),
+        'id': "".join(random.sample(string.lowercase+string.digits, 16)),
         'username': request.json['username'],
         'email': request.json['email'],
         'password': request.json['password']
     }
     users = mongo.db.users
     users.insert(user)
-    return users.find()
+    user = JSONEncoder().encode(users.find_one())
+    #return "user added"
+    return user
 
 @app.route("/droplets", methods=["GET"])
 def get_droplets():
