@@ -3,6 +3,8 @@ import json
 from bson import ObjectId
 from flask import Flask, jsonify, json, request, abort
 from flask.ext.cors import CORS
+from flask.ext.mongoengine import MongoEngine
+from mongoengine import *
 from index import list_droplets
 from flask_oauthlib.provider import OAuth2Provider
 from flask.ext.pymongo import PyMongo
@@ -12,8 +14,13 @@ import string
 app = Flask(__name__)
 oauth = OAuth2Provider(app)
 CORS(app)
-app.config["MONGO_DBNAME"] = 'do_app'
-mongo = PyMongo(app)
+
+connect('do_app')
+
+class User(Document):
+    username = StringField(required=True,unique=True)
+    email = StringField(required=True,unique=True)
+    password = StringField(required=True)
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -29,17 +36,28 @@ def index():
 def create_user():
     if not request.json:
         abort(400)
+
+    new_user = User(username=request.json['username'], email= request.json['email'], password= request.json['password']).save()
+
+    # user = {
+    #     'username': request.json['username'],
+    #     'email': request.json['email'],
+    #     'password': request.json['password']
+    # }
+    # users = mongo.db.users
+    # users.insert(user)
+    # user = JSONEncoder().encode(users.find_one())
+    print new_user.id
+    print new_user.username
+    print new_user.email
     user = {
-        'id': "".join(random.sample(string.lowercase+string.digits, 16)),
-        'username': request.json['username'],
-        'email': request.json['email'],
-        'password': request.json['password']
+    'id': new_user.id,
+    'username': new_user.username,
+    'email': new_user.email,
+    'password': new_user.password
     }
-    users = mongo.db.users
-    users.insert(user)
-    user = JSONEncoder().encode(users.find_one())
-    #return "user added"
-    return user
+    # return JSONEncoder().encode(new_user)
+    return JSONEncoder().encode(user)
 
 @app.route("/droplets", methods=["GET"])
 def get_droplets():
