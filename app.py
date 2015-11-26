@@ -2,8 +2,12 @@
 from flask import Flask, jsonify, json
 from flask.ext.cors import CORS
 from index import list_droplets
-app = Flask(__name__)
+from flask_oauthlib.provider import OAuth2Provider
+from flask.ext.pymongo import PyMongo
 
+app = Flask(__name__)
+oauth = OAuth2Provider(app)
+mongo = PyMongo(app)
 CORS(app)
 
 @app.route("/")
