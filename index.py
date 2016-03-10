@@ -31,16 +31,23 @@ def list_droplets():
 
 if __name__ == "__main__":
     print """
-    ____  ____     ___    ____  ____
-   / __ \/ __ \   /   |  / __ \/ __ \/
-  / / / / / / /  / /| | / /_/ / /_/ /
- / /_/ / /_/ /  / ___ |/ ____/ ____/
-/_____/\____/  /_/  |_/_/   /_/
 
-    This program provides methods for calling
-    the DigitalOcean API to create and destroy droplets.
-    Provision Docker containers on Droplets, and
-    performing healthcheck and maintenance tasks. etc."""
+
+***************************************************
+***************************************************
+   __________   ___    ____  ____
+  / ____/  _/  /   |  / __ \/ __ \.
+ / /    / /   / /| | / /_/ / /_/ /
+/ /____/ /   / ___ |/ ____/ ____/
+\____/___/  /_/  |_/_/   /_/
+
+This program provides methods for calling
+the DigitalOcean API to create and manage
+droplets (cloud compute instances).
+
+***************************************************
+***************************************************
+    """
     ans=True
     while ans:
         print ("""
