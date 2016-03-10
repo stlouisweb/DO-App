@@ -15,7 +15,7 @@ def droplet_create():
 
 # Returns the list of droplets(instances) on the account.
 def list_droplets():
-     token = "4e8073041c5811735cf470f95e8778e145eaa4515fe8cdb6ed15315be948ed8e"
+     token = ""
      droplets = requests.get("https://api.digitalocean.com/v2/droplets", auth=(token, ""))
      if droplets.status_code == 200:
          do_droplets = droplets.json()
